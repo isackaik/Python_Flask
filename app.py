@@ -1,3 +1,4 @@
+import sqlalchemy.exc
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
 from models import Usuarios
@@ -17,7 +18,7 @@ class Usuario(Resource):
         except AttributeError:
             response = {
                 'status': 'error',
-                'message': 'Usuario nao encontrado '
+                'mensagem': 'Usuario nao encontrado.'
             }
 
         return jsonify(response)
@@ -40,7 +41,7 @@ class Usuario(Resource):
         except AttributeError:
             response = {
                 'status': 'error',
-                'message': 'Usuario nao encontrado '
+                'mensagem': 'Usuario nao encontrado.'
             }
 
         return jsonify(response)
@@ -52,13 +53,13 @@ class Usuario(Resource):
             user.delete()
             response = {
                 'status': 'Sucesso',
-                'message': mensagem
+                'mensagem': mensagem
             }
 
         except AttributeError:
             response = {
                 'status': 'error',
-                'message': 'Usuario nao encontrado '
+                'mensagem': 'Usuario nao encontrado.'
             }
 
         return response
@@ -66,13 +67,19 @@ class Usuario(Resource):
 class CreateUser(Resource):
     def post(self):
         dados = request.json
-        user = Usuarios(cpf=dados['cpf'], nome=dados['nome'], data_nascimento=dados['data_nascimento'])
-        user.save()
-        response = {
-            'cpf': user.cpf,
-            'nome': user.nome,
-            'data de nasccimento': user.data_nascimento
-        }
+        try:
+            user = Usuarios(cpf=dados['cpf'], nome=dados['nome'], data_nascimento=dados['data_nascimento'])
+            user.save()
+            response = {
+                'cpf': user.cpf,
+                'nome': user.nome,
+                'data de nascimento': user.data_nascimento
+            }
+        except sqlalchemy.exc.IntegrityError:
+            response = {
+                'status': 'error',
+                'mensagem': 'CPF já cadastrado.'
+            }
 
         return jsonify(response)
 
