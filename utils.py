@@ -2,7 +2,7 @@ from models import Usuarios
 
 
 def insert_user():
-    user = Usuarios(cpf='07510631505', nome='Isac', data_nascimento='2000-05-26')
+    user = Usuarios(cpf='07510631505', nome='Isac Kaik', data_nascimento='2000-05-26')
     print(user)
     Usuarios.save(user)
 
@@ -20,10 +20,11 @@ def update_user():
 
 
 def delete_user():
-    user = Usuarios.query.filter_by(cpf='4444444444').first()
+    user = Usuarios.query.filter_by(cpf='07510631505').first()
     Usuarios.delete(user)
 
 
 if __name__ == '__main__':
     insert_user()
+    #delete_user()
     select_user()
