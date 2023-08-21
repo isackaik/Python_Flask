@@ -70,7 +70,7 @@ class Usuario(Resource):
             if 'nome' in dados:
                 user.nome = dados['nome']
             if 'data_nascimento' in dados:
-                user.data_nascimento = dados['dados_nascimento']
+                user.data_nascimento = dados['data_nascimento']
             user.save()
             response = {
                 'cpf': user.cpf,
@@ -82,6 +82,16 @@ class Usuario(Resource):
             response = {
                 'status': 'error',
                 'mensagem': 'Usuario nao encontrado.'
+            }
+        except KeyError:
+            response = {
+                'status': 'error',
+                'mensagem': 'Corpo da requisição inválida.'
+            }
+        except sqlalchemy.exc.DataError:
+            response = {
+                'ststus': 'error',
+                'mensagem': 'Formato de data inválida. Formato aceito: yyyy-MM-dd'
             }
 
         return jsonify(response)
